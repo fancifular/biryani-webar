@@ -79,6 +79,12 @@
           align-self: center;
           color: white;
         }
+
+        #scantext {
+          position: absolute;
+          top: 85%;
+          align-self: center;
+        }
   
         #example-scanning-overlay .inner .scanline {
           position: absolute;
@@ -92,24 +98,34 @@
           50% { top: calc(100% - 10px) }
         }
         #redirectbtn {
-            transform: translate(-50%, -50%);
-            position: absolute;
-            top: 90%;
-            left: 50%;
-            width: 70%;
-            height: auto;
-            visibility: hidden;
-            z-index: 99999;
+          transform: translate(-50%, -50%);
+          position: absolute;
+          top: 90%;
+          left: 50%;
+          width: 70%;
+          height: auto;
+          visibility: hidden;
+          z-index: 99999;
+        }
+        #rotateText {
+          transform: translate(-50%, -50%);
+          position: absolute;
+          top: 90%;
+          left: 50%;
+          width: 70%;
+          height: auto;
+          visibility: hidden;
+          z-index: 99999;
         }
         #logo {
-            transform: translate(-50%, -50%);
-            position: absolute;
-            top: 7%;
-            left: 50%;
-            width: auto;
-            height: 70px;
-            visibility: hidden;
-            z-index: 99999;
+          transform: translate(-50%, -50%);
+          position: absolute;
+          top: 7%;
+          left: 50%;
+          width: auto;
+          height: 70px;
+          visibility: hidden;
+          z-index: 99999;
         }
       </style>
     </head>
@@ -119,11 +135,13 @@
                 <div class="inner"> 
                   <img src="./assets/TargetOverlay.png"/>
                   <div class="scanline"></div>
-                  <h3>Scan the Raan-e-Murgh <br>
-                      Biryani on the leaflet.</h3>
+                  <img id="scantext" style="opacity: 1;" src="./assets/ScanText.png"/>
+                  <!-- <h3>Scan the Raan-e-Murgh <br>
+                      Biryani on the leaflet.</h3> -->
                 </div>
             </div>
-            <img id="redirectbtn" src="./assets/RedirectButton2.png" onclick="redirectBtnClick()"/>
+            <img id="rotateText" src="./assets/RotateText.png" />
+            <img id="redirectbtn" src="./assets/RedirectBtn.png" onclick="redirectBtnClick()"/>
             <img id="logo" src="./assets/Behrouz-Logo.png" />
         
             <a-scene mindar-image="imageTargetSrc: ./assets/TargetOverlay.mind; filterMinCF:0.0001; filterBeta: 0.001; showStats: false; uiScanning: #example-scanning-overlay;" loading-screen="dotsColor: red; backgroundColor: black" gesture-detector color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
@@ -168,9 +186,11 @@
               init: function () {
                 this.el.addEventListener('targetFound', event => {
                     document.getElementById('example-scanning-overlay').style.display = 'none'
+                    document.getElementById('rotateText').style.visibility = "visible"
                     console.log("target found");
                     setTimeout(function() {
-                        redirectbtn.style.visibility = "visible"
+                      redirectbtn.style.visibility = "visible"
+                      document.getElementById('rotateText').style.visibility = "hidden"
                     },4000)
                 });
                 this.el.addEventListener('targetLost', event => {
