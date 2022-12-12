@@ -143,6 +143,17 @@
       visibility: hidden;
       z-index: 99999;
     }
+
+    #cameraNotPermitted {
+      transform: translate(-50%, -50%);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 70%;
+      height: auto;
+      visibility: hidden;
+      z-index: 99999;
+    }
   </style>
 </head>
 
@@ -160,6 +171,7 @@
     <img id="rotateText" src="./assets/RotateText1.png" />
     <img id="redirectbtn" src="./assets/RedirectBtn.png" onclick="redirectBtnClick()" />
     <img id="logo" src="./assets/Behrouz-Logo.png" />
+    <img id="cameraNotPermitted" src="./assets/CameraNotPermitted.png" />
 
     <a-scene
       mindar-image="imageTargetSrc: ./assets/TargetOverlay.mind; filterMinCF:0.0001; filterBeta: 0.001; showStats: false; uiScanning: #example-scanning-overlay;"
@@ -193,6 +205,22 @@
     const sceneEl = document.querySelector('a-scene');
     const arSystem = sceneEl.systems["mindar-image-system"];
 
+    if ('mediaDevices' in navigator && 'getUserMedia' in navigator.mediaDevices) {
+      console.log("Let's get this party started")
+    }
+
+    navigator.mediaDevices.getUserMedia({video: true})
+    .then((stream) => {
+      console.log('Camera Access Permitted')
+    })
+    .catch((err) => {
+      console.log('Camera Access Denied')
+      document.getElementById('cameraNotPermitted').style.visibility = 'visible'
+      setTimeout(function(){
+        window.location.reload();
+      },5000)
+    });
+
     sceneEl.addEventListener("arReady", (event) => {
       console.log("MindAR is ready")
       document.getElementById('logo').style.visibility = 'visible'
@@ -201,8 +229,7 @@
     function redirectBtnClick() {
       console.log("Redirecting...")
       // window.location.href = "https://www.behrouzbiryani.com/"
-      window.open(
-        "https://www.behrouzbiryani.com/", "_blank");
+      window.open("https://www.behrouzbiryani.com/", "_blank");
     }
 
     AFRAME.registerComponent('mytarget', {
