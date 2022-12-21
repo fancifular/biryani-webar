@@ -200,17 +200,35 @@
       console.log("Let's get this party started")
     }
 
-    navigator.mediaDevices.getUserMedia({video: true})
-    .then((stream) => {
-      console.log('Camera Access Permitted')
-    })
-    .catch((err) => {
-      console.log('Camera Access Denied')
-      document.getElementById('cameraNotPermitted').style.visibility = 'visible'
-      setTimeout(function(){
-        window.location.reload();
-      },5000)
-    });
+    var constraints = {
+      video: true,
+      audio: false
+    }
+
+    setInterval(function() {
+      navigator.permissions.query({ name: 'camera' }).then(function (result) {
+        // alert(result.state);
+        if (result.state === 'granted') {
+          //permission has already been granted, no prompt is shown
+        } else if (result.state === 'prompt') {
+          //there's no peristent permission registered, will be showing the prompt
+        } else if (result.state === 'denied') {
+        //permission has been denied
+        window.navigator.mediaDevices.getUserMedia(constraints)
+        .then((stream) => {
+            console.log('Camera Access Permitted')
+          })
+          .catch((err) => {
+            console.log('Camera Access Denied')
+            document.getElementById('cameraNotPermitted').style.visibility = 'visible'
+            setTimeout(function () {
+              window.location.reload();
+            }, 5000)
+          });
+        }
+      });
+    },1000)
+      
 
     sceneEl.addEventListener("arReady", (event) => {
       console.log("MindAR is ready")
